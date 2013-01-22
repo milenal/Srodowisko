@@ -1,0 +1,25 @@
+#!/bin/bash
+
+wej=`zenity --file-selection --title="Wybierz plik do podzielenia"`
+
+	if [ "$?" = 1 ] ; then
+		exit 
+	fi
+
+wyj=`zenity --file-selection --save --title="Podaj nazwę oraz wybierz miejsce zapisu spakowanych części."`
+
+	if [ "$?" = 1 ] ; then
+		exit 
+	fi
+
+rozmiar=`zenity --list --text "Wybierz rozmiar podzielonych części:
+	50Mb
+	100Mb
+	200Mb
+" --title "Wybór wielkości podzielonych plików" --radiolist --column "" --column "Dostępne rozmiary" FALSE "50" FALSE "100" FALSE "200"` 
+
+	if [ "$?" = 1 ] ; then
+		exit 
+	fi
+split -b "$rozmiar" "$wej"
+rar a "-v$rozmiar" "$wyj.rar" ./"$wej"
